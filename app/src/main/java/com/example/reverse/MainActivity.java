@@ -1,5 +1,6 @@
 package com.example.reverse;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,11 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+    public static List<Activity> activities = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 window.setAttributes(attributes);
             }
         }
-
+        MyApplication.getRefWatcher().watch(this);
         LinearLayout layout = new LinearLayout(this);
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -49,5 +54,6 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(imageView);
         imageView.startAnimation(scaleAnimation);
         setContentView(layout);
+        activities.add(this);
     }
 }
