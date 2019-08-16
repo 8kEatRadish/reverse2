@@ -1,10 +1,10 @@
 package com.example.reverse;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,9 +17,11 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    public static List<Activity> activities = new ArrayList<>();
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 window.setAttributes(attributes);
             }
         }
-        MyApplication.getRefWatcher().watch(this);
         LinearLayout layout = new LinearLayout(this);
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -54,6 +55,41 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(imageView);
         imageView.startAnimation(scaleAnimation);
         setContentView(layout);
-        activities.add(this);
+        MyApplication.getRefWatcher().watch(this);
+        Observer<String> receiver = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d("123456","接收开始了");
+            }
+
+            @Override
+            public void onNext(String value) {
+                Log.d("123456","接收的参数为：" + value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("123456","接收出错：" + e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("123456","接收完成");
+            }
+        };
+        Observable justObservable = Observable.just("just1","just2");
+        //justObservable.subscribe(receiver);
+        List<String> list = new ArrayList<>();
+        list.add("from1");
+        list.add("from2");
+        list.add("from3");
+
+
+        String[]items = {"just1","just2","just3","just4","just5","just6"};
+
+        Observable fromeObservable = Observable.fromArray(items);
+        fromeObservable.subscribe(receiver);
+
+
     }
 }

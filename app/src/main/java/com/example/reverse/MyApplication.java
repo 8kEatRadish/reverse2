@@ -17,9 +17,4 @@ public class MyApplication extends Application {
     public static RefWatcher getRefWatcher(){
         return LeakCanary.installedRefWatcher();
     }
-    private void installLeakCanary(){
-        RefWatcher refWatcher = LeakCanary.refWatcher(this)
-                .watchActivities(false)
-                .buildAndInstall();
-    }
 }
